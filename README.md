@@ -1,6 +1,6 @@
 # JEI History (1.19.2 Forge)
 
-Client-side recipe lookup history for **JEI 11.6.0.1024** on **Minecraft 1.19.2 Forge**.
+Recipe lookup history for **JEI 11.6.0.1024** on **Minecraft 1.19.2 Forge**.
 
 - Configuration: `config/jeihistory-client.toml`
   - `open_history` (default `true`)
