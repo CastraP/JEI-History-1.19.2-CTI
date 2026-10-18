@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.castra.jeihistory.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "jeihistory.refmap.json",
+  "client": [
+    "IngredientGridAccessor",
+    "JeiGuiStarterMixin",
+    "OverlayHelperMixin"
+  ]
+}

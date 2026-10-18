@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Specification-Title: jeihistory
+Specification-Vendor: Castra
+Specification-Version: 1
+Implementation-Title: jeihistory
+Implementation-Version: 1.0.0
+Implementation-Vendor: Castra
+Implementation-Timestamp: 2026-10-18T23:58:49+0800
+MixinConfigs: jeihistory.mixins.json
+
