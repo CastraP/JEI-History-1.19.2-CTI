@@ -2,6 +2,7 @@ package com.castra.jeihistory.gui.history;
 
 import com.castra.jeihistory.JeiHistoryConfig;
 import com.castra.jeihistory.mixin.IngredientGridAccessor;
+import com.castra.jeihistory.storage.HistoryStorage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -63,6 +64,7 @@ public class HistoryIngredientGrid extends IngredientGrid {
     private final IIngredientManager ingredientManager;
     private final IngredientListRenderer historyRenderer;
     private final List<ITypedIngredient<?>> historyList = new ArrayList<>();
+    private final HistoryStorage historyStorage;
 
     private boolean showHistory;
     private int historyMaxSize;
@@ -96,6 +98,8 @@ public class HistoryIngredientGrid extends IngredientGrid {
         );
         this.ingredientManager = ingredientManager;
         this.historyRenderer = new IngredientListRenderer(editModeConfig, worldConfig, ingredientManager);
+        this.historyStorage = HistoryStorage.create();
+        this.historyStorage.load(ingredientManager, historyList);
     }
 
     @Override
@@ -147,6 +151,7 @@ public class HistoryIngredientGrid extends IngredientGrid {
 
         if (historyList.size() > historyMaxSize) {
             historyList.subList(historyMaxSize, historyList.size()).clear();
+            historyStorage.save(ingredientManager, historyList);
         }
         historyRenderer.set(0, historyList);
     }
@@ -275,6 +280,7 @@ public class HistoryIngredientGrid extends IngredientGrid {
             historyList.subList(maxSize, historyList.size()).clear();
         }
         historyRenderer.set(0, historyList);
+        historyStorage.save(ingredientManager, historyList);
     }
 
     private static <T> boolean equal(
