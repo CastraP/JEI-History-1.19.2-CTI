@@ -1,0 +1,24 @@
+# Gradle
+.gradle/
+build/
+
+# IDE build output (VS Code Java / Eclipse)
+bin/
+out/
+
+# IDE metadata
+.classpath
+.project
+.settings/
+.idea/
+*.iml
+
+# Minecraft run directories
+run/
+runs/
+
+# Logs
+*.log
+
+# Loose compiled classes
+*.class
