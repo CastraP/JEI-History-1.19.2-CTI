@@ -62,12 +62,12 @@ public class HistoryIngredientGrid extends IngredientGrid {
 
     private final IngredientGridAccessor accessor = (IngredientGridAccessor) this;
     private final IIngredientManager ingredientManager;
+    private final IIngredientGridConfig gridConfig;
     private final IngredientListRenderer historyRenderer;
     private final List<ITypedIngredient<?>> historyList = new ArrayList<>();
     private final HistoryStorage historyStorage;
 
     private boolean showHistory;
-    private int historyMaxSize;
     private int historyHeight;
 
     public HistoryIngredientGrid(
@@ -97,6 +97,7 @@ public class HistoryIngredientGrid extends IngredientGrid {
             cheatUtil
         );
         this.ingredientManager = ingredientManager;
+        this.gridConfig = gridConfig;
         this.historyRenderer = new IngredientListRenderer(editModeConfig, worldConfig, ingredientManager);
         this.historyStorage = HistoryStorage.create();
         this.historyStorage.load(ingredientManager, historyList);
@@ -124,11 +125,9 @@ public class HistoryIngredientGrid extends IngredientGrid {
         }
 
         int rows = area.getHeight() / INGREDIENT_HEIGHT;
-        int columns = area.getWidth() / INGREDIENT_WIDTH;
         int rowCount = Math.max(1, JeiHistoryConfig.historyRows());
 
         showHistory = rows - rowCount >= MIN_ROWS;
-        historyMaxSize = rowCount * columns;
         historyHeight = showHistory ? rowCount * INGREDIENT_HEIGHT : 0;
 
         addSlots(
@@ -149,10 +148,6 @@ public class HistoryIngredientGrid extends IngredientGrid {
             );
         }
 
-        if (historyList.size() > historyMaxSize) {
-            historyList.subList(historyMaxSize, historyList.size()).clear();
-            historyStorage.save(ingredientManager, historyList);
-        }
         historyRenderer.set(0, historyList);
     }
 
@@ -275,12 +270,23 @@ public class HistoryIngredientGrid extends IngredientGrid {
         historyList.removeIf(existing -> equal(helper, normalized, uniqueId, existing));
         historyList.add(0, normalized);
 
-        int maxSize = historyMaxSize > 0 ? historyMaxSize : 9 * Math.max(1, JeiHistoryConfig.historyRows());
+        int maxSize = getHistoryCapacity();
         if (historyList.size() > maxSize) {
             historyList.subList(maxSize, historyList.size()).clear();
         }
         historyRenderer.set(0, historyList);
         historyStorage.save(ingredientManager, historyList);
+    }
+
+    /**
+     * Maximum number of history entries to keep, independent of the current layout.
+     * Uses the configured history rows and JEI's maximum column count, so resizing the
+     * window or opening a GUI with less space never deletes history.
+     */
+    private int getHistoryCapacity() {
+        int rows = Math.max(1, JeiHistoryConfig.historyRows());
+        int columns = Math.max(1, gridConfig.getMaxColumns());
+        return rows * columns;
     }
 
     private static <T> boolean equal(
